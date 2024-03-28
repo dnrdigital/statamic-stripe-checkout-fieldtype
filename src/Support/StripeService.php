@@ -117,9 +117,6 @@ class StripeService
                 $config->get('success_url_include_session', 'no') === 'yes'
             ),
             'currency' => $config->get('currency_code'),
-            'metadata' => [
-                'submission' => $submission->id(),
-            ],
         ];
 
         // can only be used in "payment"
@@ -199,7 +196,19 @@ class StripeService
             $payload['payment_intent_data']['description'] = 'Single ' . $paymentDetails;
         } elseif ($payload['mode'] === 'subscription') {
             $payload['subscription_data']['description'] = 'Recurring ' . $paymentDetails;
-        }   
+        }
+
+        // metadata
+        $metadata = [];
+
+        foreach ($config->get('meta_values', []) as $metavalue) {
+            if ($mValue = $data->get($metavalue['value_handle'])) {
+                $metadata[$metavalue['metadata_key']] = $mValue;
+            }
+        }
+
+        $payload['metadata'] = $metadata;
+        $payload['metadata']['submission'] = $submission->id();
 
         return $payload;
     }
