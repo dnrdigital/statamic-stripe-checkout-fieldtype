@@ -192,6 +192,15 @@ class StripeService
             }
         }
 
+        // description
+        $paymentDetails = 'payment from ' . $submission->form->handle()  . ' - ' . $payload['customer_email'] ;
+
+        if ($payload['mode'] === 'payment') {
+            $payload['payment_intent_data']['description'] = 'Single ' . $paymentDetails;
+        } elseif ($payload['mode'] === 'subscription') {
+            $payload['subscription_data']['description'] = 'Recurring ' . $paymentDetails;
+        }   
+
         return $payload;
     }
 
