@@ -333,6 +333,36 @@ class StripeCheckoutFieldtype extends Fieldtype
                 'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.cancel_url.display'),
                 'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.cancel_url.instructions'),
             ],
+
+            'meta_values' => [
+                'mode' => 'grid',
+                'add_row' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.add_row'),
+                'reorderable' => true,
+                'fullscreen' => false,
+                'type' => 'grid',
+                'max_rows' => 24,
+                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.display'),
+                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.instructions'),
+
+                'fields' => [
+                    [
+                        'handle' => 'metadata_key',
+                        'field' => [
+                            'width' => 50,
+                            'type' => 'text',
+                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.fields.metadata_key'),
+                        ],
+                    ],
+                    [
+                        'handle' => 'handle',
+                        'field' => [
+                            'width' => 50,
+                            'type' => 'text',
+                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.fields.handle'),
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
