@@ -112,6 +112,18 @@ return [
             'display' => 'Cancel URL',
             'instructions' => 'If set, Checkout displays a back button and customers will be directed to this URL if they decide to cancel payment and return to your website.',
         ],
+
+        'meta_values' => [
+            'display' => 'Stripe Metadata',
+            'instructions' => 'Pass values from form fields to Stripe metadata keys.',
+
+            'fields' => [
+                'metadata_key' => 'Stripe Metadata Key',
+                'handle' => 'Field handle for value',
+            ],
+
+            'add_row' => 'Add key and handle',
+        ],
     ],
 
     'errors' => [
