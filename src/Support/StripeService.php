@@ -202,7 +202,7 @@ class StripeService
         $metadata = [];
 
         foreach ($config->get('meta_values', []) as $metavalue) {
-            if ($mValue = $data->get($metavalue['value_handle'])) {
+            if ($mValue = $data->get($metavalue['handle'])) {
                 $metadata[$metavalue['metadata_key']] = $mValue;
             }
         }
