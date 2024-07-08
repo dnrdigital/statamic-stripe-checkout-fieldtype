@@ -193,12 +193,6 @@ class StripeService
             }
         }
 
-        if ($payload['mode'] === 'payment') {
-            $payload['payment_intent_data']['description'] = 'Single ' . $paymentDetails;
-        } elseif ($payload['mode'] === 'subscription') {
-            $payload['subscription_data']['description'] = 'Recurring ' . $paymentDetails;
-        }
-
         // metadata
         $metadata = [];
 
@@ -208,8 +202,15 @@ class StripeService
             }
         }
 
-        $payload['metadata'] = $metadata;
-        $payload['metadata']['submission'] = $submission->id();
+        $metadata['submission'] = $submission->id();
+
+        if ($payload['mode'] === 'payment') {
+            $payload['payment_intent_data']['description'] = 'Single ' . $paymentDetails;
+            $payload['payment_intent_data']['metadata'] = $metadata;
+        } elseif ($payload['mode'] === 'subscription') {
+            $payload['subscription_data']['description'] = 'Recurring ' . $paymentDetails;
+            $payload['subscription_data']['metadata'] = $metadata;
+        }
 
         return $payload;
     }
