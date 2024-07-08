@@ -111,12 +111,12 @@ class StripeService
         // build the payload
         $payload = [
             'client_reference_id' => $submission->id(),
-            'mode' => $config->get('mode_choice') === 'yes' ? $mode : $config->get('mode'),
+            'mode' => $config->get('mode_choice') === 'yes' ? $mode : $config->get('mode', 'payment'),
             'success_url' => $this->getUrl(
                 $config->get('success_url'),
                 $config->get('success_url_include_session', 'no') === 'yes'
             ),
-            'currency' => $config->get('currency_code'),
+            'currency' => $config->get('currency_code', 'GBP'),
         ];
 
         // can only be used in "payment"
@@ -146,7 +146,7 @@ class StripeService
             if (is_numeric($value) && $value > 0) {
                 $lineItem = [
                     'price_data' => [
-                        'currency' => $config->get('currency_code'),
+                        'currency' => $config->get('currency_code', 'GBP'),
                         'product' => $product['product_id'],
                         'unit_amount' => $value * 100,
                     ],
