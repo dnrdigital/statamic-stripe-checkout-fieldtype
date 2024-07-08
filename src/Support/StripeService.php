@@ -181,16 +181,17 @@ class StripeService
             $payload['cancel_url'] = $this->getUrl($config->get('cancel_url'));
         }
 
+        // description
+        $paymentDetails = 'payment from ' . $submission->form->handle();
+
         // customer_email
         if ($config->get('customer_email')) {
             // get the email value
             if ($emailAddress = $data->get($config->get('customer_email'))) {
                 $payload['customer_email'] = $emailAddress;
+                $paymentDetails .= ' - ' . $emailAddress;
             }
         }
-
-        // description
-        $paymentDetails = 'payment from ' . $submission->form->handle()  . ' - ' . $payload['customer_email'] ;
 
         if ($payload['mode'] === 'payment') {
             $payload['payment_intent_data']['description'] = 'Single ' . $paymentDetails;
