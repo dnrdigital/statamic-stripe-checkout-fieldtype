@@ -121,7 +121,7 @@ class StripeService
 
         // can only be used in "payment"
         if ($payload['mode'] === 'payment') {
-            $payload['customer_creation'] = $config->get('customer_creation');
+            $payload['customer_creation'] = $config->get('customer_creation', 'if_required' );
         }
 
         // line_items
