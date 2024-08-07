@@ -13,6 +13,7 @@ use Statamic\Facades\Data;
 use Statamic\Facades\URL;
 use Statamic\Fields\Field;
 use Statamic\Forms\Submission;
+use Statamic\Support\Arr;
 use Statamic\Support\Str;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
@@ -111,17 +112,20 @@ class StripeService
         // build the payload
         $payload = [
             'client_reference_id' => $submission->id(),
-            'mode' => $config->get('mode_choice') === 'yes' ? $mode : $config->get('mode', 'payment'),
+            'mode' => $config->get('mode_choice', 'yes') === 'yes' ? ($mode ?? 'payment') : $config->get('mode', 'payment'),
             'success_url' => $this->getUrl(
                 $config->get('success_url'),
                 $config->get('success_url_include_session', 'no') === 'yes'
             ),
-            'currency' => $config->get('currency_code', 'GBP'),
+            'currency' => $config->get('currency_code', config('statamic-stripe-checkout-fieldtype.cp_currency')),
+            'metadata' => [
+                'submission' => $submission->id(),
+            ],
         ];
 
         // can only be used in "payment"
         if ($payload['mode'] === 'payment') {
-            $payload['customer_creation'] = $config->get('customer_creation', 'if_required' );
+            $payload['customer_creation'] = $config->get('customer_creation', 'always');
         }
 
         // line_items
@@ -130,28 +134,51 @@ class StripeService
         // prices
         // handle is a quantity
         foreach ($config->get('prices', []) as $price) {
-            $quantity = $data->get($price['handle']);
-            if (is_numeric($quantity) && $quantity > 0) {
-                $lineItems[] = [
+            $quantity = (int) $data->get($price['handle']);
+            if (is_int($quantity) && $quantity > 0) {
+                $lineItem = [
                     'price' => $price['price_id'],
                     'quantity' => $quantity,
                 ];
+
+                if (Arr::get($price, 'adjustable_quantity', false)) {
+                    $adjustableQuantity = [
+                        'enabled' => true,
+                    ];
+
+                    if (Arr::get($price, 'adjustable_quantity_minimum', null)) {
+                        $adjustableQuantity['minimum'] = $price['adjustable_quantity_minimum'];
+                    }
+
+                    if (Arr::get($price, 'adjustable_quantity_maximum', null)) {
+                        $adjustableQuantity['maximum'] = $price['adjustable_quantity_maximum'];
+                    }
+
+                    $lineItem['adjustable_quantity'] = $adjustableQuantity;
+                }
+
+                $lineItems[] = $lineItem;
             }
         }
 
         // products
         // handle is a value, quantity always 1
         foreach ($config->get('products', []) as $product) {
-            $value = $data->get($product['handle']);
+            $value = (float) $data->get($product['handle']);
             if (is_numeric($value) && $value > 0) {
                 $lineItem = [
                     'price_data' => [
-                        'currency' => $config->get('currency_code', 'GBP'),
+                        'currency' => $config->get('currency_code', config('statamic-stripe-checkout-fieldtype.cp_currency')),
                         'product' => $product['product_id'],
                         'unit_amount' => $value * 100,
                     ],
                     'quantity' => 1,
                 ];
+
+                // set quantity
+                if (Arr::get($product, 'has_quantity', 1) === 'field') {
+                    $lineItem['quantity'] = (int) $data->get(Arr::get($product, 'handle_quantity', 1));
+                }
 
                 // if subscription, set price up to be recurring monthly
                 if ($payload['mode'] === 'subscription') {
@@ -159,6 +186,23 @@ class StripeService
                         'interval' => $config->get('recurring_interval', 'month'),
                         'interval_count' => $config->get('recurring_interval_count', 1),
                     ];
+                }
+
+                // set adjustable quantity
+                if (Arr::get($product, 'adjustable_quantity', false)) {
+                    $adjustableQuantity = [
+                        'enabled' => true,
+                    ];
+
+                    if (Arr::get($product, 'adjustable_quantity_minimum', null)) {
+                        $adjustableQuantity['minimum'] = $product['adjustable_quantity_minimum'];
+                    }
+
+                    if (Arr::get($product, 'adjustable_quantity_maximum', null)) {
+                        $adjustableQuantity['maximum'] = $product['adjustable_quantity_maximum'];
+                    }
+
+                    $lineItem['adjustable_quantity'] = $adjustableQuantity;
                 }
 
                 $lineItems[] = $lineItem;
@@ -172,7 +216,7 @@ class StripeService
         }
 
         // allow_promotion_codes
-        if ($config->get('allow_promotion_codes') === 'yes') {
+        if ($config->get('allow_promotion_codes', 'no') === 'yes') {
             $payload['allow_promotion_codes'] = true;
         }
 
@@ -237,7 +281,7 @@ class StripeService
             }
         }
 
-        return $url;
+        return URL::makeAbsolute($url);
     }
 
     public function createWebhook(bool $disabled = false): bool|string
