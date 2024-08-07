@@ -225,12 +225,35 @@ class StripeService
             $payload['cancel_url'] = $this->getUrl($config->get('cancel_url'));
         }
 
+        // description
+        $paymentDetails = 'payment from ' . $submission->form->handle();
+
         // customer_email
         if ($config->get('customer_email')) {
             // get the email value
             if ($emailAddress = $data->get($config->get('customer_email'))) {
                 $payload['customer_email'] = $emailAddress;
+                $paymentDetails .= ' - ' . $emailAddress;
             }
+        }
+
+        // metadata
+        $metadata = [];
+
+        foreach ($config->get('meta_values', []) as $metavalue) {
+            if ($mValue = $data->get($metavalue['handle'])) {
+                $metadata[$metavalue['metadata_key']] = $mValue;
+            }
+        }
+
+        $metadata['submission'] = $submission->id();
+
+        if ($payload['mode'] === 'payment') {
+            $payload['payment_intent_data']['description'] = 'Single ' . $paymentDetails;
+            $payload['payment_intent_data']['metadata'] = $metadata;
+        } elseif ($payload['mode'] === 'subscription') {
+            $payload['subscription_data']['description'] = 'Recurring ' . $paymentDetails;
+            $payload['subscription_data']['metadata'] = $metadata;
         }
 
         return $payload;
