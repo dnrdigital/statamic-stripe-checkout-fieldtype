@@ -16,17 +16,28 @@ class StripeWebhookController extends Controller
 
         // if this is one of the events to listen for, clear the cache
         if (in_array($payload['type'], StripeService::STRIPE_EVENTS)) {
+
             // set max retries
             $this->setMaxNetworkRetries();
 
-            // clear the stripe cache
-            $this->clearStripeCache();
+            if ($payload->type == 'checkout.session.completed'
+                || $payload->type == 'checkout.session.async_payment_succeeded') {
+
+                // checkout completed so fulfill checkout
+                $this->fulfillStripeCheckout($payload->data->object->id);
+
+            }  else  {     
+
+                // clear the stripe cache
+                $this->clearStripeCache();
+
+            }
 
             return new Response('Webhook Handled', 200);
         }
 
         // unknown event
-        return new Response;
+        return new Response('Invalid Payload', 400);
     }
 
     /**
@@ -38,6 +49,11 @@ class StripeWebhookController extends Controller
     protected function setMaxNetworkRetries($retries = 3)
     {
         Stripe::setMaxNetworkRetries($retries);
+    }
+
+    protected function fulfillStripeCheckout($checkoutId)
+    {
+        app(StripeService::class)->fulfillCheckout($checkoutId);
     }
 
     protected function clearStripeCache()
