@@ -23,6 +23,8 @@ class StripeService
     const STRIPE_VERSION = '2023-10-16';
 
     const STRIPE_EVENTS = [
+        'checkout.session.completed',
+        'checkout.session.async_payment_succeeded',
         'plan.created',
         'plan.deleted',
         'plan.updated',
