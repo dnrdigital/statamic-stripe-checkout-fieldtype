@@ -23,8 +23,8 @@ class StripeWebhookController extends Controller
             if ($payload->type == 'checkout.session.completed'
                 || $payload->type == 'checkout.session.async_payment_succeeded') {
 
-                // checkout completed so fulfill checkout
-                $this->fulfillStripeCheckout($payload->data->object->id);
+                // checkout completed so check for payment
+                $this->notifyStripeCheckout($payload->data->object->id);
 
             }  else  {     
 
@@ -51,9 +51,9 @@ class StripeWebhookController extends Controller
         Stripe::setMaxNetworkRetries($retries);
     }
 
-    protected function fulfillStripeCheckout($checkoutId)
+    protected function notifyStripeCheckout($checkoutId)
     {
-        app(StripeService::class)->fulfillCheckout($checkoutId);
+        app(StripeService::class)->notifyCheckout($checkoutId);
     }
 
     protected function clearStripeCache()
