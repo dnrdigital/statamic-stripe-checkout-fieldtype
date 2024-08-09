@@ -61,7 +61,17 @@ return [
                 'no' => 'Always use Default Mode',
             ],
         ],
-
+    
+        'submit_type' => [
+            'display' => 'Stripe Checkout button label',
+            'instructions' => 'Can only be altered in payment mode.',
+            'options' => [
+                'pay' => 'Pay',
+                'donate' => 'Donate',
+                'book' = 'Book',
+            ],
+        ],
+    
         'recurring_interval' => [
             'display' => 'Recurring interval',
             'instructions' => 'Only applies to Products. Defines the recurring interval period type.',
