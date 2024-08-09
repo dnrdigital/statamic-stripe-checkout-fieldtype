@@ -437,31 +437,46 @@ class StripeService
         });
     }
 
-    public function fulfillCheckout($session_id) {
-        
-        // Set your secret key. Remember to switch to your live secret key in production.
-        
-        // TODO: Log the string "Fulfilling Checkout Session $session_id"
-        // TODO: Make this function safe to run multiple times,
-        // even concurrently, with the same session ID
-        // TODO: Make sure fulfillment hasn't already been
-        // peformed for this Checkout Session
-        
-        // Retrieve the Checkout Session from the API with line_items expanded
-        
-        $checkout_session = $stripe->checkout->sessions->retrieve($session_id, [
+    public function notifyCheckout($session_id) 
+    {
+
+        $this->getService();
+
+        // Checkout session: line_items expanded, client_reference_id for submission id
+        $checkout_session = $this->service->checkout->sessions->retrieve($session_id, [
             'expand' => ['line_items'],
-          ]);
-        
-        // Check the Checkout Session's payment_status property
-        // to determine if fulfillment should be peformed
-        
-        if ($checkout_session->payment_status != 'unpaid') {
+        ]);
+
+        // Also triggered by landing page, so make sure not open or expired
+        if ($checkout_session->status == 'complete') {
             
-            // TODO: Perform fulfillment of the line items
-            // TODO: Record/save fulfillment status for this
-            // Checkout Session
+            // Find submission with checkout session
+            $submission = FormSubmission::find($checkout_session->client_reference_id);
         
+            // get the Stripe Checkout field
+            $handle = StripeCheckoutFieldtypeFacade::getStripeCheckoutFieldHandle($submission->form());
+            $value = $submission->data()[$handle];
+
+            if ($value['checkout_payment_status'] == 'unpaid' && 
+                $checkout_session->payment_status == 'paid') {
+
+                $value['checkout_payment_status'] = 'paid';
+                $submission->set($handle, $value)->saveQuietly();
+
+                //TO DO: send notification
+
+                return true;
+            }
+
+            // TO DO: handle no payment required
+            // TO DO: handle already 'paid' in submission?
+            // TO DO: handle submission not found, other errors?
+            return false;
+
         }
+
+        // TO DO: handle checkout expired, checkout open, can't find Stripe
+        return false;
+
     }
 }
