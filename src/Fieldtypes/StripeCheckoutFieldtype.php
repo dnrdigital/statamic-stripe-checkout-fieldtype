@@ -41,7 +41,7 @@ class StripeCheckoutFieldtype extends Fieldtype
             $value = [
                 'label' => $this->getLabel($value),
                 'checkout_session_id' => null,
-                'checkout_payment_status' => null,
+                'checkout_payment_status' => 'unpaid',
                 'value' => $value,
             ];
         }

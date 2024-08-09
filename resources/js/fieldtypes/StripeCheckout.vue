@@ -7,7 +7,7 @@
                 <div class="font-medium">Checkout Session ID</div>
                 <div class="text-gray-600">{{ value.checkout_session_id }}</div>
             </div>
-            <div v-if="value.checkout_payment_status" class="mt-2 text-xs text-gray-700">
+            <div class="mt-2 text-xs text-gray-700">
                 <div class="font-medium">Checkout Payment Status</div>
                 <div class="text-gray-600">{{ value.checkout_payment_status }}</div>
             </div>
