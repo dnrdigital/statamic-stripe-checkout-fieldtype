@@ -346,6 +346,23 @@ class StripeCheckoutFieldtype extends Fieldtype
                 ],
             ],
 
+            'submit_type' => [
+                'type' => 'select',
+                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.display'),
+                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.instructions'),
+                'options' => [
+                    'pay' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.options.pay'),
+                    'donate' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.options.donate'),
+                    'book' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.options.book'),
+                ],
+                'default' => 'pay',
+
+                'if_any' => [
+                    'mode_choice' => 'equals yes',
+                    'mode' => 'equals payment',
+                ],
+            ],
+
             'recurring_interval' => [
                 'type' => 'select',
                 'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.display'),
