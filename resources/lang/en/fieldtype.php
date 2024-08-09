@@ -68,7 +68,7 @@ return [
             'options' => [
                 'pay' => 'Pay',
                 'donate' => 'Donate',
-                'book' = 'Book',
+                'book' => 'Book',
             ],
         ],
     
