@@ -1,151 +1,164 @@
 <?php
 
 return [
-    'title' => 'Stripe Checkout',
+   'title' => 'Stripe Checkout',
 
-    'config' => [
+   'config' => [
 
-        'currency_code' => [
-            'display' => 'Currency Code',
-            'instructions' => 'A three-letter <a href=":link" target="_blank">ISO currency code</a> supported by Stripe.',
-        ],
+       'currency_code' => [
+           'display' => 'Currency Code',
+           'instructions' => 'A three-letter <a href=":link" target="_blank">ISO currency code</a> supported by Stripe.',
+       ],
 
-        'prices' => [
+       'prices' => [
+           'display' => 'Prices',
+           'instructions' => 'Creating a Price association uses the defined price for the line item in Stripe.<br><br>The "Quantity Field Handle" is the field in your Blueprint that will be the quantity of this Price to send to Stripe.<br><br>When the "Quantity Field Handle" field has a positive integer value, it will be sent to Stripe.',
+
+           'fields' => [
+               'price_id' => 'Stripe Price ID',
+               'handle' => 'Quantity Field Handle',
+               'adjustable_quantity' => 'Make quantity adjustable during checkout',
+               'adjustable_quantity_minimum' => 'Minimum',
+               'adjustable_quantity_maximum' => 'Maximum',
+           ],
+
+           'add_row' => 'Add Price',
+       ],
+
+       'user_prices' => [
             'display' => 'Prices',
             'instructions' => 'Creating a Price association uses the defined price for the line item in Stripe.<br><br>The "Quantity Field Handle" is the field in your Blueprint that will be the quantity of this Price to send to Stripe.<br><br>When the "Quantity Field Handle" field has a positive integer value, it will be sent to Stripe.',
 
             'fields' => [
-                'price_id' => 'Stripe Price ID',
-                'handle' => 'Quantity Field Handle',
-                'adjustable_quantity' => 'Make quantity adjustable during checkout',
-                'adjustable_quantity_minimum' => 'Minimum',
-                'adjustable_quantity_maximum' => 'Maximum',
+                'select_field_handle' => 'Select Field Handle',
+                'select_field_value' => 'Select Field Value',
             ],
 
-            'add_row' => 'Add Price',
+            'add_row' => 'Add Group',
         ],
 
-        'products' => [
-            'display' => 'Products',
-            'instructions' => 'Creating a Price association uses the defined price for the line item in Stripe.<br><br>The "Value Field Handle" field is the field in your Blueprint that will be the value of this Product to send to Stripe.<br><br>When the "Value Field Handle" field has a positive numeric value, it will be sent to Stripe as a new Price object for the Product, with a set quantity of 1.',
+       'products' => [
+           'display' => 'Products',
+           'instructions' => 'Creating a Price association uses the defined price for the line item in Stripe.<br><br>The "Value Field Handle" field is the field in your Blueprint that will be the value of this Product to send to Stripe.<br><br>When the "Value Field Handle" field has a positive numeric value, it will be sent to Stripe as a new Price object for the Product, with a set quantity of 1.',
 
-            'fields' => [
-                'product_id' => 'Stripe Product ID',
-                'handle' => 'Value Field Handle',
+           'fields' => [
+               'product_id' => 'Stripe Product ID',
+               'handle' => 'Value Field Handle',
 
-                'has_quantity' => 'Set quantity...',
-                'has_quantity_1' => 'as 1',
-                'has_quantity_field' => 'from a field',
+               'has_quantity' => 'Set quantity...',
+               'has_quantity_1' => 'as 1',
+               'has_quantity_field' => 'from a field',
 
-                'handle_quantity' => 'Quantity Field Handle',
-            ],
+               'handle_quantity' => 'Quantity Field Handle',
+           ],
 
-            'add_row' => 'Add Product',
-        ],
+           'add_row' => 'Add Product',
+       ],
 
-        'mode' => [
-            'display' => 'Default Mode',
-            'instructions' => 'Define the default type of checkout to create.',
+       'mode' => [
+           'display' => 'Default Mode',
+           'instructions' => 'Define the default type of checkout to create.',
 
-            'options' => [
-                'payment' => 'One-time payment',
-                'subscription' => 'Subscription',
-            ],
-        ],
+           'options' => [
+               'payment' => 'One-time payment',
+               'subscription' => 'Subscription',
+           ],
+       ],
 
-        'mode_choice' => [
-            'display' => 'Choose mode?',
-            'instructions' => 'Can the user choose between Payment and Subscription?',
-            'options' => [
-                'yes' => 'User to decide',
-                'no' => 'Always use Default Mode',
-            ],
-        ],
-    
-        'submit_type' => [
-            'display' => 'Stripe Checkout button label',
-            'instructions' => 'Can only be altered in payment mode.',
-            'options' => [
-                'pay' => 'Pay',
-                'donate' => 'Donate',
-                'book' => 'Book',
-            ],
-        ],
-    
-        'recurring_interval' => [
-            'display' => 'Recurring interval',
-            'instructions' => 'Only applies to Products. Defines the recurring interval period type.',
-            'options' => [
-                'day' => 'Day',
-                'week' => 'Week',
-                'month' => 'Month',
-                'year' => 'Year',
-            ],
-        ],
+       'mode_choice' => [
+           'display' => 'Choose mode?',
+           'instructions' => 'Can the user choose between Payment and Subscription?',
+           'options' => [
+               'yes' => 'User to decide',
+               'no' => 'Always use Default Mode',
+               'price' => 'Use Default Mode, user selects price',
+           ],
+       ],
+  
+       'submit_type' => [
+           'display' => 'Stripe Checkout button label',
+           'instructions' => 'Can only be altered in payment mode.',
+           'options' => [
+               'pay' => 'Pay',
+               'donate' => 'Donate',
+               'book' => 'Book',
+           ],
+       ],
+  
+       'recurring_interval' => [
+           'display' => 'Recurring interval',
+           'instructions' => 'Only applies to Products. Defines the recurring interval period type.',
+           'options' => [
+               'day' => 'Day',
+               'week' => 'Week',
+               'month' => 'Month',
+               'year' => 'Year',
+           ],
+       ],
 
-        'recurring_interval_count' => [
-            'display' => 'Recurring interval count',
-            'instructions' => 'Only applies to Products. Defines the duration of the interval period.',
-        ],
+       'recurring_interval_count' => [
+           'display' => 'Recurring interval count',
+           'instructions' => 'Only applies to Products. Defines the duration of the interval period.',
+       ],
 
-        'allow_promotion_codes' => [
-            'display' => 'Allow Promotion Codes?',
+       'allow_promotion_codes' => [
+           'display' => 'Allow Promotion Codes?',
 
-            'options' => [
-                'no' => 'No',
-                'yes' => 'Yes',
-            ],
-        ],
+           'options' => [
+               'no' => 'No',
+               'yes' => 'Yes',
+           ],
+       ],
 
-        'customer_email' => [
-            'display' => 'Email Address Field Handle',
-            'instructions' => 'The handle of the field in your form that collects the customer email address. Leave empty to not send the Customer Email to Stripe.',
-        ],
+       'customer_email' => [
+           'display' => 'Email Address Field Handle',
+           'instructions' => 'The handle of the field in your form that collects the customer email address. Leave empty to not send the Customer Email to Stripe.',
+       ],
 
-        'customer_creation' => [
-            'display' => 'Create Stripe Customer?',
-            'instructions' => 'Should a new Customer be created in Stripe? When set to "If required", a Customer will be created for a Subscription, but not a One-time Payment.',
+       'customer_creation' => [
+           'display' => 'Create Stripe Customer?',
+           'instructions' => 'Should a new Customer be created in Stripe? When set to "If required", a Customer will be created for a Subscription, but not a One-time Payment.',
 
-            'options' => [
-                'always' => 'Always',
-                'if_required' => 'If required',
-            ],
-        ],
+           'options' => [
+               'always' => 'Always',
+               'if_required' => 'If required',
+           ],
+       ],
 
-        'success_url' => [
-            'display' => 'Success URL',
-            'instructions' => 'The URL to which Stripe should send customers when checkout is complete.',
-        ],
+       'success_url' => [
+           'display' => 'Success URL',
+           'instructions' => 'The URL to which Stripe should send customers when checkout is complete.',
+       ],
 
-        'success_url_include_session' => [
-            'display' => 'Include Checkout Session ID with Success URL?',
-            'instructions' => 'When enabled, the Checkout Session ID will be included in the Success URL to allow you to personalise the "success" page, if you wish.',
+       'success_url_include_session' => [
+           'display' => 'Include Checkout Session ID with Success URL?',
+           'instructions' => 'When enabled, the Checkout Session ID will be included in the Success URL to allow you to personalise the "success" page, if you wish.',
 
-            'options' => [
-                'no' => 'No',
-                'yes' => 'Yes',
-            ],
-        ],
+           'options' => [
+               'no' => 'No',
+               'yes' => 'Yes',
+           ],
+       ],
 
-        'cancel_url' => [
-            'display' => 'Cancel URL',
-            'instructions' => 'If set, Checkout displays a back button and customers will be directed to this URL if they decide to cancel payment and return to your website.',
-        ],
+       'cancel_url' => [
+           'display' => 'Cancel URL',
+           'instructions' => 'If set, Checkout displays a back button and customers will be directed to this URL if they decide to cancel payment and return to your website.',
+       ],
 
-        'meta_values' => [
-            'display' => 'Stripe Metadata',
-            'instructions' => 'Pass values from form fields to Stripe metadata keys.',
+       'meta_values' => [
+           'display' => 'Stripe Metadata',
+           'instructions' => 'Pass values from form fields to Stripe metadata keys.',
 
-            'fields' => [
-                'metadata_key' => 'Stripe Metadata Key',
-                'handle' => 'Field handle for value',
-            ],
+           'fields' => [
+               'metadata_key' => 'Stripe Metadata Key',
+               'handle' => 'Field handle for value',
+           ],
 
-            'add_row' => 'Add key and handle',
-        ],
-    ],
+           'add_row' => 'Add key and handle',
+       ],
+   ],
 
-    'errors' => [
-        'cp' => 'The Stripe Checkout fieldtype is designed for use in your Forms blueprints only.',
-    ],
+   'errors' => [
+       'cp' => 'The Stripe Checkout fieldtype is designed for use in your Forms blueprints only.',
+   ],
 ];
