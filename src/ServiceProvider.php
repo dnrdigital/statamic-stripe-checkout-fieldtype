@@ -5,6 +5,7 @@ namespace MityDigital\StatamicStripeCheckoutFieldtype;
 use MityDigital\StatamicStripeCheckoutFieldtype\Console\Commands\CreateWebhookCommand;
 use MityDigital\StatamicStripeCheckoutFieldtype\Fieldtypes\StripeCheckoutFieldtype;
 use MityDigital\StatamicStripeCheckoutFieldtype\Listeners\FormSubmittedListener;
+use MityDigital\StatamicStripeCheckoutFieldtype\Tags\PriceData;
 use Statamic\Events\FormSubmitted;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
@@ -29,6 +30,10 @@ class ServiceProvider extends AddonServiceProvider
     protected $routes = [
         'cp' => __DIR__.'/../routes/cp.php',
         'web' => __DIR__.'/../routes/web.php',
+    ];
+
+    protected $tags = [
+        PriceData::class,
     ];
 
     protected $vite = [
