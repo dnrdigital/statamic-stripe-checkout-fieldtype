@@ -21,11 +21,8 @@ class PriceData extends \Statamic\Tags\Tags
     {
         // get products from the stripe service
         $products = app(StripeService::class)->getProducts();
-        $test = 'hello';
 
-
-        return $test;
-        //return $products;
+        return $products;
     }
 
 }
