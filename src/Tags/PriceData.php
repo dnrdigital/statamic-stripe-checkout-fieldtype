@@ -22,7 +22,7 @@ class PriceData extends \Statamic\Tags\Tags
         // get products from the stripe service
         $products = app(StripeService::class)->getProducts();
 
-        return $products;
+        return json_encode($products);
     }
 
 }
