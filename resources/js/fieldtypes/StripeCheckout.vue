@@ -3,6 +3,10 @@
         <div v-if="message" class="font-bold text-red-500 text-sm">{{ message }}</div>
         <div v-else>
             <div>{{ value.label }}</div>
+            <div v-if="value.userpriceid" class="mt-2 text-xs text-gray-700">
+                <div class="font-medium">User price Id</div>
+                <div class="text-gray-600">{{ value.userpriceid }}</div>
+            </div>
             <div v-if="value.checkout_session_id" class="mt-2 text-xs text-gray-700">
                 <div class="font-medium">Checkout Session ID</div>
                 <div class="text-gray-600">{{ value.checkout_session_id }}</div>
@@ -13,12 +17,12 @@
             </div>
         </div>
     </div>
-</template>
-
-<script>
-export default {
+ </template>
+ 
+ <script>
+ export default {
     mixins: [Fieldtype],
-
+ 
     computed: {
         message() {
             if (typeof this.value === 'object' && this.value.message) {
@@ -27,5 +31,6 @@ export default {
             return false;
         }
     }
-}
-</script>
+ }
+ </script>
+ 
