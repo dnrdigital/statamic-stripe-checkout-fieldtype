@@ -26,8 +26,8 @@ return [
        ],
 
        'user_prices' => [
-            'display' => 'Prices',
-            'instructions' => 'Creating a Price association uses the defined price for the line item in Stripe.<br><br>The "Quantity Field Handle" is the field in your Blueprint that will be the quantity of this Price to send to Stripe.<br><br>When the "Quantity Field Handle" field has a positive integer value, it will be sent to Stripe.',
+            'display' => 'User prices',
+            'instructions' => 'Present and optionally group prices for the user to choose from.<br><br>The "Select Field Handle" is the select field in your Blueprint that allows the user to select a group, with the "Select Field Value" corresponding to the select option.',
 
             'fields' => [
                 'select_field_handle' => 'Select Field Handle',
