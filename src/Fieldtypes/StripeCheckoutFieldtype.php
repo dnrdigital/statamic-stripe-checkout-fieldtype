@@ -226,7 +226,7 @@ class StripeCheckoutFieldtype extends Fieldtype
                        'field' => [
                            'width' => 50,
                            'type' => 'text',
-                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.select_field_handle'),
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.select_field_handle'),
                        ],
                    ],
                    [
@@ -234,7 +234,7 @@ class StripeCheckoutFieldtype extends Fieldtype
                        'field' => [
                            'width' => 50,
                            'type' => 'text',
-                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.select_field_value'),
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.select_field_value'),
                        ],
                    ],
                    [
