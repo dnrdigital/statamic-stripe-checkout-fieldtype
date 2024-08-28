@@ -279,11 +279,19 @@ class StripeCheckoutFieldtype extends Fieldtype
                                            ->mapWithKeys(fn ($price) => [$price['value'] => $price['label']]),
                                    ],
                                ],
-                           ],
-                       ],
-                   ],
-               ],
-           ],
+                               [
+                                'handle' => 'price_note',
+                                'field' => [
+                                    'width' => 100,
+                                    'type' => 'text',
+                                    'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.price_note'),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
 
            'products' => [
                'mode' => 'grid',
