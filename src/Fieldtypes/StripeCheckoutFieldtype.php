@@ -287,7 +287,6 @@ class StripeCheckoutFieldtype extends Fieldtype
                                     'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.price_note'),
                                     ],
                                 ],
-                                ,
                                [
                                 'handle' => 'price_group',
                                 'field' => [
