@@ -33,6 +33,8 @@ return [
                 'select_field_handle' => 'Select Field Handle',
                 'select_field_value' => 'Select Field Value',
                 'price_note' => 'Add a note below the price',
+                'price_group' => 'Group title',
+                'price_group_instructions' => 'Group one or more prices by this value',
             ],
 
             'add_row' => 'Add Group',
