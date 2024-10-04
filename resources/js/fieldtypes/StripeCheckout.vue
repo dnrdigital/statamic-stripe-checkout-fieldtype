@@ -12,7 +12,7 @@
                 <div class="text-gray-600">{{ value.price_name }}</div>
             </div>
             <div v-if="value.price_amount" class="mt-2 text-xs text-gray-700">
-                <div class="font-medium">Checkout Session ID</div>
+                <div class="font-medium">Amount</div>
                 <div class="text-gray-600">{{ value.price_amount }}</div>
             </div>
             <div v-if="value.checkout_session_id" class="mt-2 text-xs text-gray-700">
