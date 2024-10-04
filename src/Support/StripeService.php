@@ -50,19 +50,17 @@ class StripeService
 
            // save the id with the submission
            $handle = StripeCheckoutFieldtypeFacade::getStripeCheckoutFieldHandle($submission->form());
-           $value = $submission->data()[$handle];
+           $mode = $submission->data()[$handle];
+           $value = [];
 
-           if ($value != 'subscription' && $value != 'payment'){
-               $prices = $this->getPrices();
-               $value['userprice_id'] = ($value);
-               $value['userprice_name'] = $prices[$value]['name'];
-               $value['userprice_amount'] = $prices[$value]['amount'];
-           }
-
-           if (! is_array($value)) {
-               $value = [
-                   'value' => $payload['mode'],
-               ];
+           if ($mode != 'subscription' && $mode != 'payment'){
+            $prices = $this->getPrices();
+            $value['value'] = 'User price';
+            $value['price_id'] = ($mode);
+            $value['price_name'] = $prices[$mode]['name'];
+            $value['price_amount'] = $prices[$mode]['amount'];
+           } else {
+            $value['value'] = $mode;
            }
 
            $value['checkout_session_id'] = $checkout['id'];
