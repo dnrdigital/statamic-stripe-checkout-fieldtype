@@ -18,11 +18,6 @@
                     </label>
                 </div>
             </div>
-            <div v-if="value.price_id" class="mt-2 text-xs text-gray-700">
-                <div class="font-medium">User price Id</div>
-                <div class="text-gray-600">{{ value.price_id }}</div>
-            </div>
-            </div>
             <div v-if="value.checkout_session_id" class="mt-2 text-xs text-gray-700">
                 <div class="font-medium">Checkout Session ID</div>
                 <div class="text-gray-600">{{ value.checkout_session_id }}</div>

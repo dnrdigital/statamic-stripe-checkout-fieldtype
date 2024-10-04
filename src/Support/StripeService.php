@@ -55,13 +55,11 @@ class StripeService
 
            if ($mode != 'subscription' && $mode != 'payment'){
             $prices = $this->getPrices();
-            $value['value'] = 'Price selected by user';
-            $value['price_id'] = ($mode);
             $value['price_name'] = $prices[$mode]['name'];
             $value['price_amount'] = $prices[$mode]['amount'];
-           } else {
-            $value['value'] = $mode;
            }
+
+           $value['value'] = $mode;
 
            $value['checkout_session_id'] = $checkout['id'];
            $value['checkout_payment_status'] = 'unpaid';
