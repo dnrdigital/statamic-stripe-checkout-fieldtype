@@ -55,7 +55,7 @@ class StripeService
 
            if ($mode != 'subscription' && $mode != 'payment'){
             $prices = $this->getPrices();
-            $value['value'] = 'User price';
+            $value['value'] = 'Price selected by user';
             $value['price_id'] = ($mode);
             $value['price_name'] = $prices[$mode]['name'];
             $value['price_amount'] = $prices[$mode]['amount'];
