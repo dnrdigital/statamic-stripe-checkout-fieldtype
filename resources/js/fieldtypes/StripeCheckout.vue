@@ -1,11 +1,11 @@
 <template>
-    <div>
+    <div class="radio-fieldtype">
         <div v-if="message" class="font-bold text-red-500 text-sm">{{ message }}</div>
         <div v-else>
             <div class="field-inner">
                 <label class="publish-field-label">{{ value.label }}</label>
             </div>
-            <div class="radio-fieldtype-wrapper">
+            <div v-if="value.price_name" class="radio-fieldtype-wrapper">
                 <div class="option selected disabled">
                     <label>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" aria-hidden="true" class="radio-icon" style="display: none;">
@@ -14,7 +14,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" class="radio-icon">
                             <path fill="currentColor" fill-rule="evenodd" d="M1.5 7a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0zM7 0a7 7 0 1 0 0 14A7 7 0 0 0 7 0zM3.25 7a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <input type="radio" name="booking_type" disabled="disabled" value="member"> {{ value.price_name }} - <span class="text-primary font-bold">£{{ value.price_amount }}</span>
+                        <input type="radio" name="booking_type" disabled="disabled" value="member">&nbsp;{{ value.price_name }}&nbsp;-&nbsp;<span class="font-bold">£{{ value.price_amount }}</span>
                     </label>
                 </div>
             </div>
