@@ -3,9 +3,17 @@
         <div v-if="message" class="font-bold text-red-500 text-sm">{{ message }}</div>
         <div v-else>
             <div>{{ value.label }}</div>
-            <div v-if="value.userpriceid" class="mt-2 text-xs text-gray-700">
+            <div v-if="value.price_id" class="mt-2 text-xs text-gray-700">
                 <div class="font-medium">User price Id</div>
-                <div class="text-gray-600">{{ value.userpriceid }}</div>
+                <div class="text-gray-600">{{ value.price_id }}</div>
+            </div>
+            <div v-if="value.price_name" class="mt-2 text-xs text-gray-700">
+                <div class="font-medium">Price</div>
+                <div class="text-gray-600">{{ value.price_name }}</div>
+            </div>
+            <div v-if="value.price_amount" class="mt-2 text-xs text-gray-700">
+                <div class="font-medium">Checkout Session ID</div>
+                <div class="text-gray-600">{{ value.price_amount }}</div>
             </div>
             <div v-if="value.checkout_session_id" class="mt-2 text-xs text-gray-700">
                 <div class="font-medium">Checkout Session ID</div>
