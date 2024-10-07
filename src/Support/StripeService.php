@@ -48,27 +48,29 @@ class StripeService
            // create the checkout session
            $checkout = $this->service->checkout->sessions->create($payload);
 
-           // save the id with the submission
+           // save the id and other meta with the submission
            $handle = StripeCheckoutFieldtypeFacade::getStripeCheckoutFieldHandle($submission->form());
            $value = $submission->data()[$handle];
 
            if (!is_array($value)) {
-                $old = $value;
-                $value = [
-                    'value' => $payload['mode'],
-                ];
+                if (str_starts_with($value,'price_')){
+                    $prices = $this->getPrices();
+                    $value = [
+                        'value' => $value,
+                        'price_name' => $prices[$value]['name'],
+                        'price_amount' => $prices[$value]['amount'],
+                    ];
+                } else {
+                    $value = [
+                        'value' => $payload['mode'],
+                    ];
+                }
             }
             
             $value['checkout_session_id'] = $checkout['id'];
             $value['checkout_payment_status'] = 'unpaid';
 
-            if ($old && str_starts_with($old,'price_')) {
-                $prices = $this->getPrices();
-                $value['price_name'] = $prices[$old]['name'];
-                $value['price_amount'] = $prices[$old]['amount'];
-            }
-           
-            $submission->set($handle, $value)->saveQuietly();
+            $submission->set($handle, $value )->saveQuietly();
 
             // save the session id
             Session::put(StripeCheckoutFieldtypeFacade::getSubmissionSessionKey($checkout['id']), $submission->id());
