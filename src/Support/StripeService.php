@@ -50,7 +50,8 @@ class StripeService
 
            // save the id with the submission
            $handle = StripeCheckoutFieldtypeFacade::getStripeCheckoutFieldHandle($submission->form());
-           
+           $value = $submission->data()[$handle];
+
            if (!is_array($value)) {
                 $old = $value;
                 $value = [
