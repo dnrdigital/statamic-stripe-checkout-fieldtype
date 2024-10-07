@@ -50,35 +50,39 @@ class StripeService
 
            // save the id with the submission
            $handle = StripeCheckoutFieldtypeFacade::getStripeCheckoutFieldHandle($submission->form());
-           $mode = $submission->data()[$handle];
-           $value = [];
 
-           if ($mode != 'subscription' && $mode != 'payment'){
-            $prices = $this->getPrices();
-            $value['price_name'] = $prices[$mode]['name'];
-            $value['price_amount'] = $prices[$mode]['amount'];
-           }
+           $value = $submission->data()[$handle];
+           
+           if (!is_array($value)) {
+                $value = [
+                    'value' => $payload['mode'],
+                ];
+            }
+            
+            $value['checkout_session_id'] = $checkout['id'];
+            $value['checkout_payment_status'] = 'unpaid';
 
-           $value['value'] = $mode;
+            if ($value != 'subscription' && $value != 'payment') {
+                $prices = $this->getPrices();
+                $value['price_name'] = $prices[$value]['name'];
+                $value['price_amount'] = $prices[$value]['amount'];
+            }
+           
+            $submission->set($handle, $value)->saveQuietly();
+            // save the session id
+            Session::put(StripeCheckoutFieldtypeFacade::getSubmissionSessionKey($checkout['id']), $submission->id());
+            
+            return $checkout['url'];
 
-           $value['checkout_session_id'] = $checkout['id'];
-           $value['checkout_payment_status'] = 'unpaid';
-          
-           $submission->set($handle, $value)->saveQuietly();
-
-           // save the session id
-           Session::put(StripeCheckoutFieldtypeFacade::getSubmissionSessionKey($checkout['id']), $submission->id());
-
-           return $checkout['url'];
-       } catch (NoLineItemsException $e) {
-           Log::error('StatamicStripeCheckout createCheckoutSession No Line Items: '.$e->getMessage());
-
-           return false;
-       } catch (ApiErrorException $e) {
-           Log::error('StatamicStripeCheckout createCheckoutSession StripeService API Error: '.$e->getMessage());
-
-           return false;
-       }
+        } catch (NoLineItemsException $e) {
+            
+            Log::error('StatamicStripeCheckout createCheckoutSession No Line Items: '.$e->getMessage());
+            return false;
+        } catch (ApiErrorException $e) {
+            
+            Log::error('StatamicStripeCheckout createCheckoutSession StripeService API Error: '.$e->getMessage());
+            return false;
+        }
    }
 
    protected function getService(): StripeClient
