@@ -70,7 +70,7 @@ class StripeService
             $value['checkout_session_id'] = $checkout['id'];
             $value['checkout_payment_status'] = 'unpaid';
 
-            $submission->set($handle, $value )->saveQuietly();
+            $submission->set($handle . '_details', $value )->saveQuietly();
 
             // save the session id
             Session::put(StripeCheckoutFieldtypeFacade::getSubmissionSessionKey($checkout['id']), $submission->id());
