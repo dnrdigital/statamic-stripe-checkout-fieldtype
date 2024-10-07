@@ -10,458 +10,598 @@ use Statamic\Fields\Fieldtype;
 
 class StripeCheckoutFieldtype extends Fieldtype
 {
-    protected $icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.9" d="m19.075 86.745 5.15 5.16 5.16-5.16 5.15 5.16 5.16-5.16 5.15 5.16 5.16-5.16 5.15 5.16 5.16-5.16 5.15 5.16 5.15-5.16 5.16 5.16 5.15-5.16v-73.5l-5.15-5.15-5.16 5.15-5.15-5.15-5.15 5.15-5.16-5.15-5.15 5.15-5.16-5.15-5.15 5.15-5.16-5.15-5.15 5.15-5.16-5.15-5.15 5.15v73.5z" /><path fill="currentColor" d="M38.855 28.755c-.1-.93-.52-1.66-1.25-2.18-.74-.52-1.69-.78-2.87-.78-.83 0-1.53.12-2.12.37-.59.25-1.04.59-1.36 1.01-.31.43-.47.91-.48 1.46 0 .46.1.85.31 1.18s.5.62.86.85c.36.23.76.43 1.21.58.44.16.89.29 1.33.4l2.05.51c.83.19 1.62.45 2.39.78.76.33 1.45.74 2.06 1.24.61.5 1.09 1.1 1.45 1.8.36.7.53 1.53.53 2.48 0 1.28-.33 2.41-.98 3.38s-1.6 1.73-2.83 2.27-2.73.82-4.48.82-3.18-.26-4.42-.79c-1.25-.53-2.22-1.29-2.92-2.31-.7-1.01-1.08-2.24-1.14-3.69h3.9c.06.76.29 1.39.7 1.9s.95.88 1.62 1.13c.67.25 1.41.37 2.24.37s1.62-.13 2.27-.39 1.16-.62 1.53-1.09c.37-.47.56-1.01.57-1.64 0-.57-.17-1.04-.5-1.41-.33-.37-.78-.69-1.37-.94s-1.27-.48-2.05-.68l-2.49-.64c-1.8-.46-3.22-1.17-4.26-2.11-1.04-.94-1.56-2.2-1.56-3.76 0-1.29.35-2.42 1.05-3.38.7-.97 1.66-1.72 2.87-2.26 1.21-.54 2.58-.81 4.11-.81s2.91.27 4.08.81 2.09 1.28 2.76 2.23c.67.95 1.01 2.04 1.04 3.27h-3.81l-.04.02z" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3.9" d="M34.575 21.195v1.71m0 20.84v1.72" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3.9" d="M51.785 26.495h17.46" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M51.785 34.095h9.52" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3.9" d="M27.795 54.825h43.53m-43.53 9.89h43.53m-43.53 9.88h43.53"/></svg>';
+   protected $icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.9" d="m19.075 86.745 5.15 5.16 5.16-5.16 5.15 5.16 5.16-5.16 5.15 5.16 5.16-5.16 5.15 5.16 5.16-5.16 5.15 5.16 5.15-5.16 5.16 5.16 5.15-5.16v-73.5l-5.15-5.15-5.16 5.15-5.15-5.15-5.15 5.15-5.16-5.15-5.15 5.15-5.16-5.15-5.15 5.15-5.16-5.15-5.15 5.15-5.16-5.15-5.15 5.15v73.5z" /><path fill="currentColor" d="M38.855 28.755c-.1-.93-.52-1.66-1.25-2.18-.74-.52-1.69-.78-2.87-.78-.83 0-1.53.12-2.12.37-.59.25-1.04.59-1.36 1.01-.31.43-.47.91-.48 1.46 0 .46.1.85.31 1.18s.5.62.86.85c.36.23.76.43 1.21.58.44.16.89.29 1.33.4l2.05.51c.83.19 1.62.45 2.39.78.76.33 1.45.74 2.06 1.24.61.5 1.09 1.1 1.45 1.8.36.7.53 1.53.53 2.48 0 1.28-.33 2.41-.98 3.38s-1.6 1.73-2.83 2.27-2.73.82-4.48.82-3.18-.26-4.42-.79c-1.25-.53-2.22-1.29-2.92-2.31-.7-1.01-1.08-2.24-1.14-3.69h3.9c.06.76.29 1.39.7 1.9s.95.88 1.62 1.13c.67.25 1.41.37 2.24.37s1.62-.13 2.27-.39 1.16-.62 1.53-1.09c.37-.47.56-1.01.57-1.64 0-.57-.17-1.04-.5-1.41-.33-.37-.78-.69-1.37-.94s-1.27-.48-2.05-.68l-2.49-.64c-1.8-.46-3.22-1.17-4.26-2.11-1.04-.94-1.56-2.2-1.56-3.76 0-1.29.35-2.42 1.05-3.38.7-.97 1.66-1.72 2.87-2.26 1.21-.54 2.58-.81 4.11-.81s2.91.27 4.08.81 2.09 1.28 2.76 2.23c.67.95 1.01 2.04 1.04 3.27h-3.81l-.04.02z" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3.9" d="M34.575 21.195v1.71m0 20.84v1.72" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3.9" d="M51.785 26.495h17.46" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M51.785 34.095h9.52" /><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3.9" d="M27.795 54.825h43.53m-43.53 9.89h43.53m-43.53 9.88h43.53"/></svg>';
 
-    protected $categories = ['special'];
+   protected $categories = ['special'];
 
-    protected $selectableInForms = true;
+   protected $selectableInForms = true;
 
-    public static function title()
-    {
-        return __('statamic-stripe-checkout-fieldtype::fieldtype.title');
-    }
+   public static function title()
+   {
+       return __('statamic-stripe-checkout-fieldtype::fieldtype.title');
+   }
 
-    public function view()
-    {
-        return 'statamic-stripe-checkout-fieldtype::forms.fields.stripe_checkout';
-    }
+   public function view()
+   {
+       return 'statamic-stripe-checkout-fieldtype::forms.fields.stripe_checkout';
+   }
 
-    public function preProcess($value)
-    {
-        // if we have a parent, we're part of the CP blueprints (such as a Collection blueprint)
-        if ($this->field()->parent()) {
-            return [
-                'message' => __('statamic-stripe-checkout-fieldtype::fieldtype.errors.cp'),
-            ];
-        }
+   public function preProcess($value)
+   {
+       // if we have a parent, we're part of the CP blueprints (such as a Collection blueprint)
+       if ($this->field()->parent()) {
+           return [
+               'message' => __('statamic-stripe-checkout-fieldtype::fieldtype.errors.cp'),
+           ];
+       }
 
-        if (is_array($value) && array_key_exists('value', $value)) {
-            $value['label'] = $this->getLabel($value['value']);
-        } else {
-            $value = [
-                'label' => $this->getLabel($value),
-                'checkout_session_id' => null,
-                'value' => $value,
-            ];
-        }
+       if (is_array($value) && array_key_exists('value', $value)) {
+           $value['label'] = $this->getLabel($value['value']);
+       } else {
+           $value = [
+               'label' => $this->getLabel($value),
+               'checkout_session_id' => null,
+               'checkout_payment_status' => null,
+               'value' => $value,
+           ];
+       }
 
-        return $value;
-    }
+       return $value;
+   }
 
-    protected function getLabel($value)
-    {
-        return match ($value) {
-            'payment' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.payment'),
-            'subscription' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.subscription'),
-            default => $value
-        };
-    }
+   protected function getLabel($value)
+   {
+       return match ($value) {
+           'payment' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.payment'),
+           'subscription' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.subscription'),
+           default => $value
+       };
+   }
 
-    public function augment($value)
-    {
-        return $this->getLabel($value);
-    }
+   public function augment($value)
+   {
+       return $this->getLabel($value);
+   }
 
-    public function preProcessIndex($data)
-    {
-        // if an array, let's just get the value key
-        $value = $data;
-        if (is_array($value) && array_key_exists('value', $value)) {
-            $value = $value['value'];
-        }
+   public function preProcessIndex($data)
+   {
+       // if an array, let's just get the value key
+       $value = $data;
+       if (is_array($value) && array_key_exists('value', $value)) {
+           $value = $value['value'];
+       }
 
-        return match ($value) {
-            'payment' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.payment'),
-            'subscription' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.subscription'),
-            default => $value
-        };
-    }
+       return match ($value) {
+           'payment' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.payment'),
+           'subscription' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.subscription'),
+           default => $value
+       };
+   }
 
-    public function extraRenderableFieldData(): array
-    {
-        if ($this->config('mode_choice') === 'no') {
-            return [
-                // force the field to be hidden - it is the developer's job to honour this
-                'hide_display' => true,
-            ];
-        }
+   public function extraRenderableFieldData(): array
+   {
+       if ($this->config('mode_choice') === 'no') {
+           return [
+               // force the field to be hidden - it is the developer's job to honour this
+               'hide_display' => true,
+           ];
+       }
 
-        return [];
-    }
+       return [];
+   }
 
-    protected function configFieldItems(): array
-    {
-        // get products from the stripe service
-        $products = app(StripeService::class)->getProducts();
+   protected function configFieldItems(): array
+   {
+       // get products from the stripe service
+       $products = app(StripeService::class)->getProducts();
 
-        return [
-            'currency_code' => [
-                'type' => 'text',
-                'character_limit' => 3,
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.currency_code.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.currency_code.instructions',
-                    [
-                        'link' => 'https://www.iso.org/iso-4217-currency-codes.html',
-                    ]),
+       return [
+           'currency_code' => [
+               'type' => 'text',
+               'character_limit' => 3,
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.currency_code.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.currency_code.instructions',
+                   [
+                       'link' => 'https://www.iso.org/iso-4217-currency-codes.html',
+                   ]),
 
-                'validate' => [
-                    'required',
-                    'size:3',
-                ],
+               'validate' => [
+                   'required',
+                   'size:3',
+               ],
 
-                'default' => config('statamic-stripe-checkout-fieldtype.cp_currency'),
-            ],
+               'default' => config('statamic-stripe-checkout-fieldtype.cp_currency'),
+           ],
 
-            'prices' => [
-                'mode' => 'grid',
-                'add_row' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.add_row'),
-                'reorderable' => true,
-                'fullscreen' => false,
-                'type' => 'grid',
-                'max_rows' => 20,
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.instructions'),
+           'prices' => [
+               'mode' => 'grid',
+               'add_row' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.add_row'),
+               'reorderable' => true,
+               'fullscreen' => false,
+               'type' => 'grid',
+               'max_rows' => 20,
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.instructions'),
 
-                'fields' => [
-                    [
-                        'handle' => 'price_id',
-                        'field' => [
-                            'width' => 66,
-                            'type' => 'select',
-                            'taggable' => true,
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.price_id'),
-                            'validate' => ['required'],
-                            'options' => $products->map(fn ($product) => $product['prices']->map(function ($price) use (
-                                $product
-                            ) {
-                                // get the name
-                                $name = $price['name'];
+               'fields' => [
+                   [
+                       'handle' => 'price_id',
+                       'field' => [
+                           'width' => 66,
+                           'type' => 'select',
+                           'taggable' => true,
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.price_id'),
+                           'validate' => ['required'],
+                           'options' => $products->map(fn ($product) => $product['prices']->map(function ($price) use (
+                               $product
+                           ) {
+                               // get the name
+                               $name = $price['name'];
 
-                                // format the currency
-                                // @todo can be replaced by https://github.com/laravel/framework/pull/48845/files when released
-                                $amount = $this->formatNumber($price['amount']);
+                               // format the currency
+                               // @todo can be replaced by https://github.com/laravel/framework/pull/48845/files when released
+                               $amount = $this->formatNumber($price['amount']);
 
-                                // set the name string
-                                if ($name) {
-                                    $name = $name.' ('.$amount.')';
-                                } else {
-                                    $name = $amount;
-                                }
+                               // set the name string
+                               if ($name) {
+                                   $name = $name.' ('.$amount.')';
+                               } else {
+                                   $name = $amount;
+                               }
 
-                                return ['value' => $price['id'], 'label' => $product['name'].': '.$name];
-                            }))
-                                ->flatten(1)
-                                ->mapWithKeys(fn ($price) => [$price['value'] => $price['label']]),
-                        ],
-                    ],
-                    [
-                        'handle' => 'handle',
-                        'field' => [
-                            'width' => 33,
-                            'type' => 'text',
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.handle'),
-                        ],
-                    ],
-                    [
-                        'handle' => 'adjustable_quantity',
-                        'field' => [
-                            'width' => 100,
-                            'type' => 'toggle',
-                            'hide_display' => true,
-                            'inline_label' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity'),
-                        ],
-                    ],
-                    [
-                        'handle' => 'adjustable_quantity_minimum',
-                        'field' => [
-                            'width' => 50,
-                            'type' => 'text',
-                            'input_type' => 'number',
-                            'placeholder' => '0',
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity_minimum'),
-                            'if' => [
-                                'adjustable_quantity' => 'equals true',
-                            ],
-                            'validate' => [
-                                'integer',
-                                'min:0',
-                                'max:99999',
-                            ],
-                        ],
-                    ],
-                    [
-                        'handle' => 'adjustable_quantity_maximum',
-                        'field' => [
-                            'width' => 50,
-                            'type' => 'text',
-                            'input_type' => 'number',
-                            'placeholder' => '99',
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity_maximum'),
-                            'if' => [
-                                'adjustable_quantity' => 'equals true',
-                            ],
-                            'validate' => [
-                                'integer',
-                                'min:1',
-                                'max:99999',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+                               return ['value' => $price['id'], 'label' => $product['name'].': '.$name];
+                           }))
+                               ->flatten(1)
+                               ->mapWithKeys(fn ($price) => [$price['value'] => $price['label']]),
+                       ],
+                   ],
+                   [
+                       'handle' => 'handle',
+                       'field' => [
+                           'width' => 33,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.handle'),
+                       ],
+                   ],
+                   [
+                       'handle' => 'adjustable_quantity',
+                       'field' => [
+                           'width' => 100,
+                           'type' => 'toggle',
+                           'hide_display' => true,
+                           'inline_label' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity'),
+                       ],
+                   ],
+                   [
+                       'handle' => 'adjustable_quantity_minimum',
+                       'field' => [
+                           'width' => 50,
+                           'type' => 'text',
+                           'input_type' => 'number',
+                           'placeholder' => '0',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity_minimum'),
+                           'if' => [
+                               'adjustable_quantity' => 'equals true',
+                           ],
+                           'validate' => [
+                               'integer',
+                               'min:0',
+                               'max:99999',
+                           ],
+                       ],
+                   ],
+                   [
+                       'handle' => 'adjustable_quantity_maximum',
+                       'field' => [
+                           'width' => 50,
+                           'type' => 'text',
+                           'input_type' => 'number',
+                           'placeholder' => '99',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity_maximum'),
+                           'if' => [
+                               'adjustable_quantity' => 'equals true',
+                           ],
+                           'validate' => [
+                               'integer',
+                               'min:1',
+                               'max:99999',
+                           ],
+                       ],
+                   ],
+               ],
+           ],
 
-            'products' => [
-                'mode' => 'grid',
-                'add_row' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.add_row'),
-                'reorderable' => true,
-                'fullscreen' => false,
-                'type' => 'grid',
-                'max_rows' => 20,
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.instructions'),
+           'user_prices' => [
+               'mode' => 'grid',
+               'add_row' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.add_row'),
+               'reorderable' => true,
+               'fullscreen' => false,
+               'type' => 'grid',
+               'max_rows' => 20,
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.instructions'),
+               'fields' => [
+                   [
+                       'handle' => 'select_field_handle',
+                       'field' => [
+                           'width' => 50,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.select_field_handle'),
+                       ],
+                   ],
+                   [
+                       'handle' => 'select_field_value',
+                       'field' => [
+                           'width' => 50,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.select_field_value'),
+                       ],
+                   ],
+                   [
+                       'handle' => 'prices',
+                       'field' => [
+                           'width' => 100,
+                           'type' => 'grid',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.display'),
+                           'add_row' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.add_row'),
+                           'reorderable' => true,
+                           'fullscreen' => false,
+                           'max_rows' => 20,
+                           'fields' => [
+                               [
+                                   'handle' => 'price_id',
+                                   'field' => [
+                                       'width' => 66,
+                                       'type' => 'select',
+                                       'taggable' => true,
+                                       'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.price_id'),
+                                       'validate' => ['required'],
+                                       'options' => $products->map(fn ($product) => $product['prices']->map(function ($price) use (
+                                           $product
+                                       ) {
+                                           // get the name
+                                           $name = $price['name'];
 
-                'fields' => [
-                    [
-                        'handle' => 'product_id',
-                        'field' => [
-                            'width' => 66,
-                            'type' => 'select',
-                            'taggable' => true,
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.product_id'),
-                            'validate' => ['required'],
-                            'options' => $products
-                                ->mapWithKeys(fn ($product) => [$product['id'] => $product['name']])
-                                ->sort(),
-                        ],
-                    ],
-                    [
-                        'handle' => 'handle',
-                        'field' => [
-                            'width' => 33,
-                            'type' => 'text',
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.handle'),
-                        ],
-                    ],
-                    [
-                        'handle' => 'has_quantity',
-                        'field' => [
-                            'width' => 66,
-                            'type' => 'select',
-                            'taggable' => false,
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.has_quantity'),
-                            'validate' => ['required'],
-                            'default' => '1',
-                            'options' => [
-                                '1' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.has_quantity_1'),
-                                'field' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.has_quantity_field'),
-                            ],
-                        ],
-                    ],
-                    [
-                        'handle' => 'handle_quantity',
-                        'field' => [
-                            'width' => 33,
-                            'type' => 'text',
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.handle_quantity'),
-                            'if' => [
-                                'has_quantity' => 'equals field',
-                            ],
-                        ],
-                    ],
-                    [
-                        'handle' => 'adjustable_quantity',
-                        'field' => [
-                            'width' => 100,
-                            'type' => 'toggle',
-                            'hide_display' => true,
-                            'inline_label' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity'),
-                        ],
-                    ],
-                    [
-                        'handle' => 'adjustable_quantity_minimum',
-                        'field' => [
-                            'width' => 50,
-                            'type' => 'text',
-                            'input_type' => 'number',
-                            'placeholder' => '0',
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity_minimum'),
-                            'if' => [
-                                'adjustable_quantity' => 'equals true',
-                            ],
-                            'validate' => [
-                                'integer',
-                                'min:0',
-                                'max:99999',
-                            ],
-                        ],
-                    ],
-                    [
-                        'handle' => 'adjustable_quantity_maximum',
-                        'field' => [
-                            'width' => 50,
-                            'type' => 'text',
-                            'input_type' => 'number',
-                            'placeholder' => '99',
-                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity_maximum'),
-                            'if' => [
-                                'adjustable_quantity' => 'equals true',
-                            ],
-                            'validate' => [
-                                'integer',
-                                'min:1',
-                                'max:99999',
+                                           // format the currency
+                                           // @todo can be replaced by https://github.com/laravel/framework/pull/48845/files when released
+                                           $amount = $this->formatNumber($price['amount']);
+
+                                           // set the name string
+                                           if ($name) {
+                                               $name = $name.' ('.$amount.')';
+                                           } else {
+                                               $name = $amount;
+                                           }
+
+                                           return ['value' => $price['id'], 'label' => $product['name'].': '.$name];
+                                       }))
+                                           ->flatten(1)
+                                           ->mapWithKeys(fn ($price) => [$price['value'] => $price['label']]),
+                                   ],
+                               ],
+                               [
+                                'handle' => 'price_note',
+                                'field' => [
+                                    'width' => 100,
+                                    'type' => 'text',
+                                    'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.price_note'),
+                                    ],
+                                ],
+                               [
+                                'handle' => 'price_group',
+                                'field' => [
+                                    'width' => 100,
+                                    'type' => 'text',
+                                    'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.price_group'),
+                                    'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.price_group_instructions'),
+                                    ],
+                                ],
                             ],
                         ],
                     ],
                 ],
             ],
 
-            'mode' => [
-                'type' => 'select',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.instructions'),
-                'options' => [
-                    'payment' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.payment'),
-                    'subscription' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.subscription'),
-                ],
-                'default' => 'payment',
+           'products' => [
+               'mode' => 'grid',
+               'add_row' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.add_row'),
+               'reorderable' => true,
+               'fullscreen' => false,
+               'type' => 'grid',
+               'max_rows' => 20,
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.instructions'),
 
-                'validate' => [
-                    'required',
-                ],
-            ],
+               'fields' => [
+                   [
+                       'handle' => 'product_id',
+                       'field' => [
+                           'width' => 66,
+                           'type' => 'select',
+                           'taggable' => true,
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.product_id'),
+                           'validate' => ['required'],
+                           'options' => $products
+                               ->mapWithKeys(fn ($product) => [$product['id'] => $product['name']])
+                               ->sort(),
+                       ],
+                   ],
+                   [
+                       'handle' => 'handle',
+                       'field' => [
+                           'width' => 33,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.handle'),
+                       ],
+                   ],
+                   [
+                       'handle' => 'has_quantity',
+                       'field' => [
+                           'width' => 66,
+                           'type' => 'select',
+                           'taggable' => false,
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.has_quantity'),
+                           'validate' => ['required'],
+                           'default' => '1',
+                           'options' => [
+                               '1' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.has_quantity_1'),
+                               'field' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.has_quantity_field'),
+                           ],
+                       ],
+                   ],
+                   [
+                       'handle' => 'handle_quantity',
+                       'field' => [
+                           'width' => 33,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.handle_quantity'),
+                           'if' => [
+                               'has_quantity' => 'equals field',
+                           ],
+                       ],
+                   ],
+                   [
+                       'handle' => 'adjustable_quantity',
+                       'field' => [
+                           'width' => 100,
+                           'type' => 'toggle',
+                           'hide_display' => true,
+                           'inline_label' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity'),
+                       ],
+                   ],
+                   [
+                       'handle' => 'adjustable_quantity_minimum',
+                       'field' => [
+                           'width' => 50,
+                           'type' => 'text',
+                           'input_type' => 'number',
+                           'placeholder' => '0',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity_minimum'),
+                           'if' => [
+                               'adjustable_quantity' => 'equals true',
+                           ],
+                           'validate' => [
+                               'integer',
+                               'min:0',
+                               'max:99999',
+                           ],
+                       ],
+                   ],
+                   [
+                       'handle' => 'adjustable_quantity_maximum',
+                       'field' => [
+                           'width' => 50,
+                           'type' => 'text',
+                           'input_type' => 'number',
+                           'placeholder' => '99',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.adjustable_quantity_maximum'),
+                           'if' => [
+                               'adjustable_quantity' => 'equals true',
+                           ],
+                           'validate' => [
+                               'integer',
+                               'min:1',
+                               'max:99999',
+                           ],
+                       ],
+                   ],
+               ],
+           ],
 
-            'mode_choice' => [
-                'type' => 'select',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.instructions'),
-                'options' => [
-                    'no' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.options.no'),
-                    'yes' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.options.yes'),
-                ],
-                'default' => 'yes',
+           'mode' => [
+               'type' => 'select',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.instructions'),
+               'options' => [
+                   'payment' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.payment'),
+                   'subscription' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode.options.subscription'),
+               ],
+               'default' => 'payment',
 
-                'validate' => [
-                    'required',
-                ],
-            ],
+               'validate' => [
+                   'required',
+               ],
+           ],
 
-            'recurring_interval' => [
-                'type' => 'select',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.instructions'),
+           'mode_choice' => [
+               'type' => 'select',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.instructions'),
+               'options' => [
+                   'no' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.options.no'),
+                   'yes' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.options.yes'),
+                   'price' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.mode_choice.options.price'),
+               ],
+               'default' => 'yes',
 
-                'options' => [
-                    'day' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.options.day'),
-                    'week' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.options.week'),
-                    'month' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.options.month'),
-                    'year' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.options.year'),
-                ],
+               'validate' => [
+                   'required',
+               ],
+           ],
 
-                'default' => 'month',
+           'submit_type' => [
+               'type' => 'select',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.instructions'),
+               'options' => [
+                   'pay' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.options.pay'),
+                   'donate' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.options.donate'),
+                   'book' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.submit_type.options.book'),
+               ],
+               'default' => 'pay',
 
-                'if_any' => [
-                    'mode_choice' => 'equals yes',
-                    'mode' => 'equals subscription',
-                ],
-            ],
+               'if_any' => [
+                   'mode_choice' => 'equals yes',
+                   'mode' => 'equals payment',
+               ],
+           ],
 
-            'recurring_interval_count' => [
-                'type' => 'text',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval_count.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval_count.instructions'),
+           'recurring_interval' => [
+               'type' => 'select',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.instructions'),
 
-                'default' => 1,
+               'options' => [
+                   'day' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.options.day'),
+                   'week' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.options.week'),
+                   'month' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.options.month'),
+                   'year' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval.options.year'),
+               ],
 
-                'validate' => [
-                    'required',
-                    'integer',
-                ],
+               'default' => 'month',
 
-                'if_any' => [
-                    'mode_choice' => 'equals yes',
-                    'mode' => 'equals subscription',
-                ],
-            ],
+               'if_any' => [
+                   'mode_choice' => 'equals yes',
+                   'mode' => 'equals subscription',
+               ],
+           ],
 
-            'allow_promotion_codes' => [
-                'type' => 'select',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.allow_promotion_codes.display'),
-                'options' => [
-                    'no' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.allow_promotion_codes.options.no'),
-                    'yes' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.allow_promotion_codes.options.yes'),
-                ],
-                'default' => 'no',
+           'recurring_interval_count' => [
+               'type' => 'text',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval_count.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.recurring_interval_count.instructions'),
 
-                'validate' => [
-                    'required',
-                ],
-            ],
+               'default' => 1,
 
-            'customer_email' => [
-                'type' => 'text',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_email.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_email.instructions'),
-            ],
+               'validate' => [
+                   'required',
+                   'integer',
+               ],
 
-            'customer_creation' => [
-                'type' => 'select',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_creation.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_creation.instructions'),
-                'options' => [
-                    'always' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_creation.options.always'),
-                    'if_required' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_creation.options.if_required'),
-                ],
-                'default' => 'always',
+               'if_any' => [
+                   'mode_choice' => 'equals yes',
+                   'mode' => 'equals subscription',
+               ],
+           ],
 
-                'validate' => [
-                    'required',
-                ],
-            ],
+           'allow_promotion_codes' => [
+               'type' => 'select',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.allow_promotion_codes.display'),
+               'options' => [
+                   'no' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.allow_promotion_codes.options.no'),
+                   'yes' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.allow_promotion_codes.options.yes'),
+               ],
+               'default' => 'no',
 
-            'success_url' => [
-                'type' => 'link',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url.instructions'),
+               'validate' => [
+                   'required',
+               ],
+           ],
 
-                'validate' => [
-                    'required',
-                ],
-            ],
+           'customer_email' => [
+               'type' => 'text',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_email.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_email.instructions'),
+           ],
 
-            'success_url_include_session' => [
-                'type' => 'select',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url_include_session.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url_include_session.instructions'),
-                'options' => [
-                    'no' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url_include_session.options.no'),
-                    'yes' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url_include_session.options.yes'),
-                ],
-                'default' => 'no',
+           'customer_creation' => [
+               'type' => 'select',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_creation.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_creation.instructions'),
+               'options' => [
+                   'always' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_creation.options.always'),
+                   'if_required' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.customer_creation.options.if_required'),
+               ],
+               'default' => 'always',
 
-                'validate' => [
-                    'required',
-                ],
-            ],
+               'validate' => [
+                   'required',
+               ],
+           ],
 
-            'cancel_url' => [
-                'type' => 'link',
-                'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.cancel_url.display'),
-                'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.cancel_url.instructions'),
-            ],
-        ];
-    }
+           'success_url' => [
+               'type' => 'link',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url.instructions'),
 
-    protected function formatNumber($value)
-    {
-        // ensure intl is loaded
-        if (! extension_loaded('intl')) {
-            throw new RuntimeException('The "intl" PHP extension is required to use formatNumber.');
-        }
+               'validate' => [
+                   'required',
+               ],
+           ],
 
-        // return the formatted number
-        return NumberFormatter::create(Site::current()->locale(), NumberFormatter::CURRENCY)
-            ->formatCurrency(floatval($value),
-                \MityDigital\StatamicStripeCheckoutFieldtype\Facades\StripeCheckoutFieldtype::getCpCurrency());
-    }
+           'success_url_include_session' => [
+               'type' => 'select',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url_include_session.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url_include_session.instructions'),
+               'options' => [
+                   'no' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url_include_session.options.no'),
+                   'yes' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.success_url_include_session.options.yes'),
+               ],
+               'default' => 'no',
+
+               'validate' => [
+                   'required',
+               ],
+           ],
+
+           'cancel_url' => [
+               'type' => 'link',
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.cancel_url.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.cancel_url.instructions'),
+           ],
+
+           'meta_values' => [
+               'mode' => 'grid',
+               'add_row' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.add_row'),
+               'reorderable' => true,
+               'fullscreen' => false,
+               'type' => 'grid',
+               'max_rows' => 24,
+               'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.display'),
+               'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.instructions'),
+
+               'fields' => [
+                   [
+                       'handle' => 'metadata_key',
+                       'field' => [
+                           'width' => 50,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.fields.metadata_key'),
+                       ],
+                   ],
+                   [
+                       'handle' => 'handle',
+                       'field' => [
+                           'width' => 50,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.meta_values.fields.handle'),
+                       ],
+                   ],
+               ],
+           ],
+       ];
+   }
+
+   protected function formatNumber($value)
+   {
+       // ensure intl is loaded
+       if (! extension_loaded('intl')) {
+           throw new RuntimeException('The "intl" PHP extension is required to use formatNumber.');
+       }
+
+       // return the formatted number
+       return NumberFormatter::create(Site::current()->locale(), NumberFormatter::CURRENCY)
+           ->formatCurrency(floatval($value),
+               \MityDigital\StatamicStripeCheckoutFieldtype\Facades\StripeCheckoutFieldtype::getCpCurrency());
+   }
 }
