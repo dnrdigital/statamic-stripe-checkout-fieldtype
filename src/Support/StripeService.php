@@ -50,10 +50,9 @@ class StripeService
 
            // save the id with the submission
            $handle = StripeCheckoutFieldtypeFacade::getStripeCheckoutFieldHandle($submission->form());
-
-           $value = $submission->data()[$handle];
            
            if (!is_array($value)) {
+                $old = $value;
                 $value = [
                     'value' => $payload['mode'],
                 ];
@@ -62,13 +61,14 @@ class StripeService
             $value['checkout_session_id'] = $checkout['id'];
             $value['checkout_payment_status'] = 'unpaid';
 
-            if ($value != 'subscription' && $value != 'payment') {
+            if ($old && str_starts_with($old,'price_')) {
                 $prices = $this->getPrices();
-                $value['price_name'] = $prices[$value]['name'];
-                $value['price_amount'] = $prices[$value]['amount'];
+                $value['price_name'] = $prices[$old]['name'];
+                $value['price_amount'] = $prices[$old]['amount'];
             }
            
             $submission->set($handle, $value)->saveQuietly();
+
             // save the session id
             Session::put(StripeCheckoutFieldtypeFacade::getSubmissionSessionKey($checkout['id']), $submission->id());
             
@@ -78,6 +78,7 @@ class StripeService
             
             Log::error('StatamicStripeCheckout createCheckoutSession No Line Items: '.$e->getMessage());
             return false;
+
         } catch (ApiErrorException $e) {
             
             Log::error('StatamicStripeCheckout createCheckoutSession StripeService API Error: '.$e->getMessage());
