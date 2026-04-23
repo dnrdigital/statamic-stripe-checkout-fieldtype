@@ -28,12 +28,15 @@
             </div>
         </div>
     </div>
- </template>
- 
- <script>
- export default {
-    mixins: [Fieldtype],
- 
+</template>
+
+<script>
+
+import {FieldtypeMixin} from '@statamic/cms';
+
+export default {
+    mixins: [FieldtypeMixin],
+
     computed: {
         message() {
             if (typeof this.value === 'object' && this.value.message) {
