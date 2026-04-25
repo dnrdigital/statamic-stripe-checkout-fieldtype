@@ -164,6 +164,15 @@ class StripeCheckoutFieldtype extends Fieldtype
                        ],
                    ],
                    [
+                       'handle' => 'price_id_test',
+                       'field' => [
+                           'width' => 100,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.price_id_test'),
+                           'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.price_id_test_instructions'),
+                       ],
+                   ],
+                   [
                        'handle' => 'adjustable_quantity',
                        'field' => [
                            'width' => 100,
@@ -280,6 +289,15 @@ class StripeCheckoutFieldtype extends Fieldtype
                                    ],
                                ],
                                [
+                                'handle' => 'price_id_test',
+                                'field' => [
+                                    'width' => 100,
+                                    'type' => 'text',
+                                    'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.price_id_test'),
+                                    'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.prices.fields.price_id_test_instructions'),
+                                    ],
+                                ],
+                               [
                                 'handle' => 'price_note',
                                 'field' => [
                                     'width' => 100,
@@ -332,6 +350,15 @@ class StripeCheckoutFieldtype extends Fieldtype
                            'width' => 33,
                            'type' => 'text',
                            'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.handle'),
+                       ],
+                   ],
+                   [
+                       'handle' => 'product_id_test',
+                       'field' => [
+                           'width' => 100,
+                           'type' => 'text',
+                           'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.product_id_test'),
+                           'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.products.fields.product_id_test_instructions'),
                        ],
                    ],
                    [

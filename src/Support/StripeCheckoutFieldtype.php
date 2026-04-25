@@ -22,6 +22,20 @@ class StripeCheckoutFieldtype
         return config('statamic-stripe-checkout-fieldtype.secret');
     }
 
+    public function isTestMode(): bool
+    {
+        return str_starts_with((string) $this->getSecret(), 'sk_test_');
+    }
+
+    public function resolveStripeId(?string $liveId, ?string $testId): ?string
+    {
+        if ($this->isTestMode() && filled($testId)) {
+            return $testId;
+        }
+
+        return $liveId;
+    }
+
     public function getCpCurrency()
     {
         return config('statamic-stripe-checkout-fieldtype.cp_currency');

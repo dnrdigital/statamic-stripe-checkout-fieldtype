@@ -16,6 +16,8 @@ return [
 
            'fields' => [
                'price_id' => 'Stripe Price ID',
+               'price_id_test' => 'Stripe Price ID (test mode)',
+               'price_id_test_instructions' => 'Optional. Used when the active Stripe key is a sk_test_ key (e.g. on staging). Leave blank to fall back to the live Price ID.',
                'handle' => 'Quantity Field Handle',
                'adjustable_quantity' => 'Make quantity adjustable during checkout',
                'adjustable_quantity_minimum' => 'Minimum',
@@ -46,6 +48,8 @@ return [
 
            'fields' => [
                'product_id' => 'Stripe Product ID',
+               'product_id_test' => 'Stripe Product ID (test mode)',
+               'product_id_test_instructions' => 'Optional. Used when the active Stripe key is a sk_test_ key (e.g. on staging). Leave blank to fall back to the live Product ID.',
                'handle' => 'Value Field Handle',
 
                'has_quantity' => 'Set quantity...',

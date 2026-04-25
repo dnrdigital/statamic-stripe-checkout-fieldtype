@@ -55,10 +55,12 @@ class StripeService
            if (!is_array($value)) {
                 if (str_starts_with($value,'price_')){
                     $prices = $this->getPrices();
+                    $config = $this->getStripeCheckoutConfig($submission);
+                    $lookupKey = $this->resolveUserPriceId($value, $config);
                     $value = [
                         'value' => $value,
-                        'price_name' => $prices[$value]['name'],
-                        'price_amount' => $prices[$value]['amount'],
+                        'price_name' => $prices[$lookupKey]['name'] ?? null,
+                        'price_amount' => $prices[$lookupKey]['amount'] ?? null,
                     ];
                 } else {
                     $value = [
@@ -101,9 +103,8 @@ class StripeService
        return $this->service;
    }
 
-   protected function buildCheckoutPayloadFromSubmission(Submission $submission): array
+   protected function getStripeCheckoutConfig(Submission $submission): Field
    {
-       // load config from the form
        $config = $submission
            ->form()
            ->blueprint()
@@ -112,10 +113,39 @@ class StripeService
            ->filter(fn (Field $field) => $field->type() === 'stripe_checkout')
            ->first();
 
-       // if there is no config, then there's no fieldtype used
        if (! $config) {
            throw new FormBlueprintMissingStripeCheckoutException;
        }
+
+       return $config;
+   }
+
+   /**
+    * Walk the user_prices config to translate a submitted live price ID into the
+    * test-mode equivalent when the active Stripe key is sk_test_*. Returns the
+    * submitted ID unchanged in live mode, or when no test_id mapping exists.
+    */
+   protected function resolveUserPriceId(string $submittedPriceId, ?Field $config): string
+   {
+       if (! StripeCheckoutFieldtypeFacade::isTestMode() || ! $config) {
+           return $submittedPriceId;
+       }
+
+       foreach ($config->get('user_prices', []) ?? [] as $group) {
+           foreach (Arr::get($group, 'prices', []) ?? [] as $row) {
+               if (Arr::get($row, 'price_id') === $submittedPriceId) {
+                   return Arr::get($row, 'price_id_test') ?: $submittedPriceId;
+               }
+           }
+       }
+
+       return $submittedPriceId;
+   }
+
+   protected function buildCheckoutPayloadFromSubmission(Submission $submission): array
+   {
+       // load config from the form
+       $config = $this->getStripeCheckoutConfig($submission);
 
        // get the data
        $data = $submission->data();
@@ -162,7 +192,7 @@ class StripeService
        // did the user pick a price?
        if ($userpriceId) {
            $lineItem = [
-               'price' => $userpriceId,
+               'price' => $this->resolveUserPriceId($userpriceId, $config),
                'quantity' => 1,
            ];
            $lineItems[] = $lineItem;
@@ -173,7 +203,10 @@ class StripeService
            $quantity = (int) $data->get($price['handle']);
            if (is_int($quantity) && $quantity > 0) {
                $lineItem = [
-                   'price' => $price['price_id'],
+                   'price' => StripeCheckoutFieldtypeFacade::resolveStripeId(
+                       Arr::get($price, 'price_id'),
+                       Arr::get($price, 'price_id_test')
+                   ),
                    'quantity' => $quantity,
                ];
 
@@ -205,7 +238,10 @@ class StripeService
                $lineItem = [
                    'price_data' => [
                        'currency' => $config->get('currency_code', config('statamic-stripe-checkout-fieldtype.cp_currency')),
-                       'product' => $product['product_id'],
+                       'product' => StripeCheckoutFieldtypeFacade::resolveStripeId(
+                           Arr::get($product, 'product_id'),
+                           Arr::get($product, 'product_id_test')
+                       ),
                        'unit_amount' => $value * 100,
                    ],
                    'quantity' => 1,
