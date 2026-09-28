@@ -37,6 +37,8 @@ return [
                 'price_note' => 'Add a note below the price',
                 'price_group' => 'Group title',
                 'price_group_instructions' => 'Group one or more prices by this value',
+                'quantity_field' => 'Quantity Field Handle',
+                'quantity_field_instructions' => 'Optional. A number field in your Blueprint holding how many of this price to buy. Leave blank for a quantity of 1.',
             ],
 
             'add_row' => 'Add Group',

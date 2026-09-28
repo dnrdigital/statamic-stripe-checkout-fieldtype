@@ -142,6 +142,43 @@ class StripeService
        return $submittedPriceId;
    }
 
+   /**
+    * Quantity for a chosen user price: the value of the row's optional
+    * quantity_field when it is a whole number of at least 1, otherwise 1.
+    * Rows are matched within the group whose select field matches the
+    * submission, so the same price ID can carry a quantity in one group only.
+    */
+   protected function resolveUserPriceQuantity(string $submittedPriceId, ?Field $config, $data): int
+   {
+       if (! $config) {
+           return 1;
+       }
+
+       foreach ($config->get('user_prices', []) ?? [] as $group) {
+           $selectHandle = Arr::get($group, 'select_field_handle');
+           if ($selectHandle && (string) $data->get($selectHandle) !== (string) Arr::get($group, 'select_field_value')) {
+               continue;
+           }
+
+           foreach (Arr::get($group, 'prices', []) ?? [] as $row) {
+               if (Arr::get($row, 'price_id') !== $submittedPriceId) {
+                   continue;
+               }
+
+               $quantityField = Arr::get($row, 'quantity_field');
+               if (! $quantityField) {
+                   return 1;
+               }
+
+               $quantity = filter_var($data->get($quantityField), FILTER_VALIDATE_INT);
+
+               return $quantity !== false && $quantity >= 1 ? $quantity : 1;
+           }
+       }
+
+       return 1;
+   }
+
    protected function buildCheckoutPayloadFromSubmission(Submission $submission): array
    {
        // load config from the form
@@ -193,7 +230,7 @@ class StripeService
        if ($userpriceId) {
            $lineItem = [
                'price' => $this->resolveUserPriceId($userpriceId, $config),
-               'quantity' => 1,
+               'quantity' => $this->resolveUserPriceQuantity($userpriceId, $config, $data),
            ];
            $lineItems[] = $lineItem;
        }
