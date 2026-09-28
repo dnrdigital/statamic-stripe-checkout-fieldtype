@@ -1,0 +1,45 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: booking_type
+            field:
+              type: text
+              display: 'Booking type'
+          -
+            handle: number_of_tickets
+            field:
+              type: integer
+              display: 'Number of tickets'
+          -
+            handle: ticket_type
+            field:
+              type: stripe_checkout
+              display: 'Ticket type'
+              currency_code: GBP
+              mode: payment
+              mode_choice: price
+              success_url: 'https://www.mity.com.au'
+              success_url_include_session: 'no'
+              user_prices:
+                -
+                  select_field_handle: booking_type
+                  select_field_value: professional
+                  prices:
+                    -
+                      price_id: price_shared_day
+                      price_group: 'Non-residential'
+                -
+                  select_field_handle: booking_type
+                  select_field_value: member
+                  prices:
+                    -
+                      price_id: price_room
+                      price_group: 'Residential'
+                    -
+                      price_id: price_shared_day
+                      price_group: 'Non-residential'
+                      quantity_field: number_of_tickets

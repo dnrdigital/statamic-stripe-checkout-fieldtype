@@ -314,6 +314,15 @@ class StripeCheckoutFieldtype extends Fieldtype
                                     'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.price_group_instructions'),
                                     ],
                                 ],
+                               [
+                                'handle' => 'quantity_field',
+                                'field' => [
+                                    'width' => 100,
+                                    'type' => 'text',
+                                    'display' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.quantity_field'),
+                                    'instructions' => __('statamic-stripe-checkout-fieldtype::fieldtype.config.user_prices.fields.quantity_field_instructions'),
+                                    ],
+                                ],
                             ],
                         ],
                     ],

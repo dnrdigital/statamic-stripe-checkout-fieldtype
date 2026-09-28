@@ -304,3 +304,34 @@ it('creates a webhook', function () {
         ->not()->toBeString()
         ->toBeTrue();
 });
+
+it('uses a user price row\'s quantity field for the chosen price', function (array $data, string $price, int $quantity) {
+    $submission = Form::find('has_stripe_checkout_fieldtype_user_prices')
+        ->makeSubmission()
+        ->id('1790000000.0001')
+        ->data($data);
+
+    $payload = callProtectedMethod($this->support, 'buildCheckoutPayloadFromSubmission', [$submission]);
+
+    expect($payload['line_items'])->toHaveCount(1)
+        ->and($payload['line_items'][0])->toBe(['price' => $price, 'quantity' => $quantity]);
+})->with([
+    'member day ticket takes the quantity field' => [
+        ['booking_type' => 'member', 'ticket_type' => 'price_shared_day', 'number_of_tickets' => 3], 'price_shared_day', 3,
+    ],
+    'string quantity from a form post' => [
+        ['booking_type' => 'member', 'ticket_type' => 'price_shared_day', 'number_of_tickets' => '4'], 'price_shared_day', 4,
+    ],
+    'row without a quantity field stays at 1' => [
+        ['booking_type' => 'member', 'ticket_type' => 'price_room', 'number_of_tickets' => 3], 'price_room', 1,
+    ],
+    'same price in a group without a quantity field stays at 1' => [
+        ['booking_type' => 'professional', 'ticket_type' => 'price_shared_day', 'number_of_tickets' => 3], 'price_shared_day', 1,
+    ],
+    'missing quantity falls back to 1' => [
+        ['booking_type' => 'member', 'ticket_type' => 'price_shared_day'], 'price_shared_day', 1,
+    ],
+    'zero or invalid quantity falls back to 1' => [
+        ['booking_type' => 'member', 'ticket_type' => 'price_shared_day', 'number_of_tickets' => 'abc'], 'price_shared_day', 1,
+    ],
+]);
